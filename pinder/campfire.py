@@ -215,15 +215,18 @@ class Campfire(object):
         response, content = self._http_client.request(location, method,
             urllib.urlencode(data), headers)
         response.body = content
-        self.cookie = response.get('set-cookie')
+
+        if response.get('set-cookie'):
+            self.cookie = response.get('set-cookie')
+
         return response
-        
+
     def _post(self, path, data={}, **options):
         return self._perform_request('POST', path, data, **options)
-        
+
     def _get(self, path=''):
         return self._perform_request('GET', path)
-        
+
     def _verify_response(self, response, **options):
         if 'success' in options:
             return response.status == 200
