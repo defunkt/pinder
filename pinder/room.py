@@ -152,40 +152,79 @@ class Room(object):
 
     def destroy(self):
         """Destroys the room.
-        
+
         Returns True if successfully destroyed, False otherwise."""
         return self._verify_response(self._post(
             'account/delete/room/%s' % self.id), success=True)
-        
+
     def users(self):
         """Lists the users chatting in the room.
-        
+
         Returns a set of the users."""
         return self._campfire.users(self.name)
-        
+
     def speak(self, message):
         """Send a message to the room.
-        
+
         Returns the message if successfully sent it, None otherwise."""
         self.join()
         return self._send(message)
-    
+
     def paste(self, message):
         """Paste a message to the room.
-        
+
         Returns the message if successfully pasted it, None otherwise."""
         self.join()
         return self._send(message, {'paste': True})
-        
+
+    def messages(self):
+        """Gets new messages.
+
+        Returns a list of message data:
+         * id: the id of the message
+         * person: the name of the person who wrote the message if any
+         * user_id: the user id of the person if any
+         * message: the message itself if any"""
+        data = dict(l=self.last_cache_id, m=self.membership_key,
+                    s=self.timestamp, t=int(time.time()))
+        response = self._post("poll.fcgi", data, ajax=True)
+
+        cache_match = re.search(r'lastCacheID = (\d+)', response.body)
+        if cache_match:
+            self.last_cache_id = cache_match.groups(0)[0]
+
+        messages = []
+
+        for line in response.body.split("\r\n"):
+            if re.search(r'timestamp_message', line):
+                continue
+
+            id_match = re.search(r'message_(\d+)', line)
+            if not id_match:
+                continue
+
+            try:
+                messages.append(dict(
+                    id = id_match.groups(0)[0],
+                    user_id = re.search(r'user_(\d+)', line).groups(0)[0],
+                    person = re.search(r'\\u003Ctd class=\\"person\\"\\u003E(?:\\u003Cspan\\u003E)?(.+?)(?:\\u003C\/span\\u003E)?\\u003C\/td\\u003E', line).groups(0)[0],
+                    message = re.search(r'\\u003Ctd class=\\"body\\"\\u003E\\u003Cdiv\\u003E(.+?)\\u003C\/div\\u003E\\u003C\/td\\u003E', line).groups(0)[0]
+                    ))
+            except AttributeError:
+                print "The following line failed: "
+                print line
+
+        return messages
+
     def transcripts(self):
         """Gets the dates of transcripts of the room.
-        
+
         Returns a list of dates."""
         return self._campfire.transcripts(self.id)
-        
+
     def transcript(self, date):
         """Get the transcript for the given date (a datetime.date instance).
-        
+
         Returns a list of message data:
          * id: the id of the message
          * person: the name of the person who wrote the message if any
