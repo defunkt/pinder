@@ -211,8 +211,7 @@ class Room(object):
                     message = re.search(r'\\u003Ctd class=\\"body\\"\\u003E\\u003Cdiv\\u003E(.+?)\\u003C\/div\\u003E\\u003C\/td\\u003E', line).groups(0)[0]
                     ))
             except AttributeError:
-                print "The following line failed: "
-                print line
+                continue
 
         return messages
 
