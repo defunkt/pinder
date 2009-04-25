@@ -143,7 +143,7 @@ class Room(object):
 
         Returns True if successfully pinged, False otherwise."""
         now = datetime.now()
-        delta = self.idle_since - now
+        delta = now - self.idle_since
         if delta.seconds < 60 or force:
             self.idle_since = datetime.now()
             return self._verify_response(self._post(
