@@ -1,0 +1,41 @@
+* May 18 2008: Pinder 0.6.5: third public release.
+
+* May 18 2008: trunk: Removed BeautifulSoup and httplib2 from internal packaging, now they are required dependencies
+
+* Feb 16 2008: trunk: Added a method to retrieve the topic of the room
+
+* Jan 27 2008: trunk: The interval to ping the server should be less than 60
+
+* Dec 26 2007: trunk:
+    - Updated prototype.js version
+    - Added room.ping() to ping the server
+
+* Sep 01 2007: trunk:
+    - Fixed a problem in the fake response object
+    - Added a proper mapping implementation in the fake object
+
+* Apr 14 2007: trunk: fixed a bug in room.leave() (thanks to Pinder codebase)
+
+* Apr 10 2007: trunk: Updated BeautifulSoup to 3.0.4
+
+* Apr 08 2007: Pinder 0.6.0: second public release.
+
+* Apr 08 2007: trunk:
+  - Fixed room regexp
+  - Added support for transcripts:
+    - Campfire.transcripts()
+    - Room.transcripts()
+    - Room.transcript()
+
+* Apr 03 2007: trunk:
+  - pinder now sends a proper user agent.
+  - Added guest_access_enabled() to the public API.
+  - Little fix in toggle_guest_access().
+
+* Mar 10 2007: trunk: Updated pinder to httplib2 0.3.0.
+
+* Mar 09 2007: trunk: Added find_or_create_room_by_name() to the public API.
+
+* Mar 07 2007: trunk: Added rooms_names() and rooms() to the public API.
+
+* Mar 07 2007: Pinder 0.5.0: first public release.

@@ -1,0 +1,87 @@
+============
+User's guide
+============
+
+Pinder is a straightforward Python API to *script* Campfire_, the web 2.0 chat application kindly brought to us by the 37signals_ team.
+
+Usage is all but rocket science so I'm gonna show you its full power in its simplicity. Thanks to `Brandon Keepers`_ for Tinder_.
+
+Connect and login to the server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    >>> c = Campfire('subdomain')
+    >>> c.login('john@doe.com', 'secret')
+
+Any need to explain? I don't think so. We shall move on.
+
+Find the proper room
+~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    >>> room = c.find_room_by_name('Jonz Room')
+
+Only remember that *None* will be returned if you accidentally type in the wrong name. Ouch!
+
+Poke with the room itself!
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    >>> print room.users()
+    set([u'Alice'])
+    
+As you can see you get back a **set** of the people talking about wild stuff in *Jonz Room*. You can also, while you are at it know the name of all the chatters in your Campfire subdomain::
+
+    >>> print c.users()
+    set([u'Alice', u'Bob'])
+
+Seems Alice and Bob don't enjoy each other company any more! We don't like ladies to feel so alone so let's tell Alice she isn't::
+
+    >>> room.speak("I'm working hard to get you out of there. Keep strong!")
+    I'm working hard to get you out of there. Keep strong!
+    
+Then you can leave the room::
+
+    >>> room.leave()
+    
+or destroy Alice hopes::
+
+    >>> room.destroy()
+    
+and create your own love's nest::
+
+    >>> c.create_room("Love's Nest", topic='No pun intended')
+    
+Room eavesdropping!
+~~~~~~~~~~~~~~~~~~~
+
+You can peek inside the room reading the transcripts this way::
+
+    >>> dates_of_transcripts = room.transcripts()
+    >>> print room.transcript(dates_of_transcripts[0]) # last transcript
+    [{'person': u'Bob B.', 'message': u'Are you spying on me?', 'user_id': u'1234567', 'id': u'19343281'}]
+    
+Logout
+~~~~~~
+
+When you are done playing you can simply logout::
+
+    >>> c.logout()
+    
+and say farewell to Alice.
+
+ps. I think we forgot about Bob, but who cares?
+
+Extra
+~~~~~
+
+You can lock yourself in the room if you really want to but it's sad so I won't mention how to that. If you're absolutely certain about it go read the boring `API doc`_ where you can find other secret combos :-)
+
+.. _Campfire: http://wwww.campfirenow.com/
+.. _37signals: http://www.37signals.com/
+.. _`Brandon Keepers`: http://opensoul.org/
+.. _Tinder: http://rubyforge.org/projects/tinder
+.. _`API doc`: http://dev.oluyede.org/pinder/api_doc/

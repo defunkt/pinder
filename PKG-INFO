@@ -1,0 +1,25 @@
+Metadata-Version: 1.0
+Name: pinder
+Version: 0.6.5
+Summary: Python API for Campfire.
+Home-page: http://dev.oluyede.org/pinder/
+Author: Lawrence Oluyede
+Author-email: l.oluyede@gmail.com
+License: BSD
+Download-URL: http://dev.oluyede.org/download/pinder/0.6.5/
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python
+Classifier: Topic :: Communications :: Chat
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

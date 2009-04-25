@@ -1,0 +1,8 @@
+FAQ
+===
+
+* First and foremost: why did you take the burden to translate the already mighty Tinder?
+
+    We needed a way to integrate Campfire chats into our web application so instead of monkey patching some crappy code in a hurry I ported the whole thing to Python in a couple of hours. I think that's the right call. I could have write some glue code to make Django and Tinder communicate but the idea sucked to me.
+    
+That's it.

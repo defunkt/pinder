@@ -1,0 +1,27 @@
+Pinder 0.6.5 [May 18 2007]:
+    - BACKWARDS INCOMPATIBLE CHANGE: BeautifulSoup and httplib2 are no longer
+      distributed with Pinder. You have to install them separately.
+
+    - Fixed a bug in Room.leave()
+    
+    - Fixed a couple of bugs in the tests
+    
+    - Room objects now have ping() to ping the server and topic() to retrieve
+      the topic of the room
+
+Pinder 0.6.0 [Apr 08 2007]:
+    - Campfire objects now have rooms() and rooms_names() methods to get the 
+      list of the associated room objects and the names of all the rooms
+    
+    - Campfire objects also have find_or_create_room_by_name(), an helper 
+      method which combine find_room_by_name() and create_room()
+     
+    - The whole library has been updated to httlibp2 0.3.0
+    
+    - A proper user agent is sent during the requests
+    
+    - Room objects now have guest_access_enabled() to know if the guests can
+      enter that room
+    
+    - The support for transcripts has been added throughout the library. See
+      the changelog for details.
