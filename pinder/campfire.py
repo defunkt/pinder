@@ -106,17 +106,17 @@ class Campfire(object):
             except AttributeError: # the chat is full
                 room_name = room.h2.string.strip()
             if not room_names or room_name in room_names:
-                room_users = room.findAll('li', attrs={'class': 'user'})
+                room_users = room.find('ul').findAll('span')
                 for user in room_users:
                     all_users.append(user.string)
         return set(all_users)
-        
+
     def rooms_names(self):
         """Lists the names of the rooms available in the Campfire subdomain.
-        
+
         Returns a list of the names of the rooms."""
         rooms = self._get_rooms_markup()
-        
+
         rooms_names_list = []
         for room in rooms:
             try:
