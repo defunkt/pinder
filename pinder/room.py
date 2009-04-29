@@ -196,7 +196,7 @@ class Room(object):
         messages = []
 
         for line in response.body.split("\r\n"):
-            if re.search(r'timestamp_message', line):
+            if 'timestamp_message' in line:
                 continue
 
             id_match = re.search(r'message_(\d+)', line)
