@@ -19,42 +19,49 @@ from __init__ import __version__
 from room import Room
 
 class Campfire(object):
-    "Creates a connection to the Campfire account with the given subdomain."
-    def __init__(self, subdomain):
+    """Creates a connection to the Campfire account with the given subdomain.
+    Accepts a boolean indicating whether the connection should be made using
+    SSL or not (default: false)."""
+    def __init__(self, subdomain, ssl=False):
         #: The Campfire's subdomain.
         self.subdomain = subdomain
         #: True if the user is logged in Campfire, False otherwise.
         self.logged_in = False
         #: Contains the connection cookie.
         self.cookie = None
+
+        # Schema for the Campfire URI
+        schema = 'http'
+        if ssl: schema += 's'
+
         #: The U{urlparsed<http://docs.python.org/lib/module-urlparse.html#l2h-4268>} URI of the Campfire account.
-        self.uri = urlparse.urlparse("https://%s.campfirenow.com" % self.subdomain)
+        self.uri = urlparse.urlparse("%s://%s.campfirenow.com" % (schema, self.subdomain))
         self._location = None
         self._room_re = re.compile(r'room\/(\d*)')
         self._http_client = httplib2.Http(timeout=5)
         self._http_client.force_exception_to_status_code = False
-    
+
     def login(self, email, password):
         """Logs into Campfire with the given email and password.
-        
+
         Returns True if logged in, False otherwise."""
         response = self._post("login",
             dict(email_address=email, password=password))
         self.logged_in = self._verify_response(response,
             redirect_to=self._uri_for())
         return self.logged_in
-            
+
     def logout(self):
         """Logs out from Campfire.
-        
+
         Returns True if logged out, False otherwise."""
         retval = self._verify_response(self._get("logout"), redirect=True)
         self.logged_in = not retval
         return retval
-    
+
     def create_room(self, name, topic=''):
         """Creates a Campfire room with the given name and an optional topic.
-        
+
         Returns None if the room has not been created."""
         room_data = {
             'room[name]': name,
@@ -64,13 +71,13 @@ class Campfire(object):
             ajax=True)
         if self._verify_response(response, success=True):
             return self.find_room_by_name(name)
-            
+
     def find_room_by_name(self, name):
         """Finds a Campfire room with the given name.
-        
+
         Returns a Room instance if found, None otherwise."""
         rooms = self._get_rooms_markup()
-        
+
         for room in rooms:
             try:
                 room_name = room.h2.a.string
@@ -82,23 +89,23 @@ class Campfire(object):
                     room_uri = room.h2.a['href']
                 except AttributeError: # no uri available (!?)
                     return None
-                
+
                 room_id = self._room_id_from_uri(room_uri)
                 return Room(self, room_id, name)
-                
+
     def find_or_create_room_by_name(self, name):
         """Finds a Campfire room with the given name.
         If the room is not present it will be created.
-        
+
         Returns a Room instance."""
         return self.find_room_by_name(name) or self.create_room(name)
-    
+
     def users(self, *room_names):
         """Lists the users chatting in any room or in the given room(s).
-        
+
         Returns a set of the users."""
         rooms = self._get_rooms_markup()
-         
+
         all_users = []
         for room in rooms:
             try:
@@ -128,10 +135,10 @@ class Campfire(object):
                 rooms_names_list.append(room.h2.string.strip())
         rooms_names_list.sort()
         return rooms_names_list
-        
+
     def rooms(self):
         """Lists the available rooms.
-        
+
         Returns a list of Room objects."""
         names = self.rooms_names()
         return [self.find_room_by_name(name) for name in names]
@@ -139,7 +146,7 @@ class Campfire(object):
     def transcripts(self, room_id=None):
         """Gets the dates of the transcripts by room filtered by the given id
         if any.
-        
+
         Returns a dictionary of all the dates by room.
         """
         uri = 'files%2Btranscripts'
@@ -147,7 +154,7 @@ class Campfire(object):
             uri = '%s?room_id=%s' % (uri, str(room_id))
 
         soup = BeautifulSoup(self._get(uri).body)
-        
+
         def _filter_transcripts(tag):
             return tag.has_key('class') and 'transcript' in tag['class'].split()
         transcripts_markup = soup.findAll(_filter_transcripts)
@@ -163,35 +170,35 @@ class Campfire(object):
             except KeyError:
                 result[found_room_id] = []
             result[found_room_id].append(self._parse_transcript_date(date))
-        
+
         if room_id:
             return result[str(room_id)]
         return result
-            
+
     def _parse_transcript_date(self, date):
         return datetime.date.fromtimestamp(time.mktime(
             time.strptime(date, '%Y/%m/%d')))
 
     def _filter_rooms_markup(self, tag):
         return tag.name == 'div' and tag.has_key('id') and tag['id'].startswith('room_')
-            
+
     def _get_rooms_markup(self):
         body = self._get().body
         soup = BeautifulSoup(body)
         return soup.findAll(self._filter_rooms_markup)
-    
+
     def _uri_for(self, path=''):
         return "%s/%s" % (urlparse.urlunparse(self.uri), path)
-         
+
     def _room_id_from_uri(self, uri):
         try:
             return self._room_re.split(uri)[1]
         except IndexError:
             pass
-        
+
     def _prepare_request(self, **options):
         headers = {}
-        
+
         headers['User-Agent'] = 'Pinder/%s' % __version__
 
         if self.cookie:
@@ -200,7 +207,7 @@ class Campfire(object):
             headers['X-Requested-With'] = 'XMLHttpRequest'
             headers['X-Prototype-Version'] = '1.5.1.1'
         return headers
-        
+
     def _perform_request(self, method, path, data={}, **options):
         headers = self._prepare_request(**options)
         if method == 'POST':
@@ -241,6 +248,6 @@ class Campfire(object):
                 response, redirect=True) and location == options['redirect_to']
         else:
             return False
-            
+
 
 __all__ = ['Campfire']
