@@ -23,39 +23,44 @@ class CampfireTest(unittest.TestCase):
         uri = 'http://foobar.campfirenow.com'
         self.assertEqual(urlparse(uri), self.campfire.uri)
         self.assertEqual(self.campfire._uri_for(), '%s/' % uri)
-    
+
+    def test_ssl(self):
+        campfire = Campfire('foobar', True)
+        uri = 'https://foobar.campfirenow.com'
+        self.assertEqual(urlparse(uri), campfire.uri)
+
     def test_verify_response_success(self):
         self.response.status = 200
         self.assertEqual(True, self.campfire._verify_response(self.response,
             success=True))
-    
+
     def test_verify_response_redirect_true(self):
         self.response.status = 302
         self.assertEqual(True, self.campfire._verify_response(self.response,
             redirect=True))
-    
+
     def test_verify_response_redirect_false(self):
         self.response.status = 200
         self.assertEqual(False, self.campfire._verify_response(self.response,
             redirect=True))
-    
+
     def test_verify_response_redirect_to(self):
         self.response.status = 304
         self.assertEqual(True, self.campfire._verify_response(self.response,
             redirect_to='/foobar'))
-    
+
     def test_verify_response_redirect_to_without_redirect(self):
         self.response.status = 200
         self.assertEqual(False, self.campfire._verify_response(self.response,
             redirect_to='/foobar'))
-    
+
     def test_verify_response_redirect_to_wrong_path(self):
         response = utils.MockResponse()
         response.headers['location'] = '/baz'
         response.status = 304
         self.assertEqual(False, self.campfire._verify_response(response,
             redirect_to='/foobar'))
-            
+
     def test_prepare_request(self):
         headers = self.campfire._prepare_request()
         self.assert_('User-Agent' in headers)
