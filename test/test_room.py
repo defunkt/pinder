@@ -20,6 +20,11 @@ class RoomTest(unittest.TestCase):
         self.assertEqual(True, self.room.join())
         self.assertEqual(True, self.room.join(force=True))
 
+    def test_join_nospaces(self):
+        utils.FIXTURE = 'room_info_nospaces'
+        self.assertEqual(True, self.room.join())
+        self.assertEqual(True, self.room.join(force=True))
+
     def test_guest_url_no_guest_url(self):
         utils.FIXTURE = 'no_guest_url'
         self.assert_(self.room.guest_url() is None)

@@ -275,13 +275,13 @@ class Room(object):
             return message
 
     def _get_room_data(self):
-        self.membership_key = re.search(r'\"membershipKey\": \"([a-z0-9]+)\"',
+        self.membership_key = re.search(r'\"membershipKey\":\s?\"([a-z0-9]+)\"',
             self._room.body).groups(0)[0]
-        self.user_id = re.search(r'\"userID\": (\d+)',
+        self.user_id = re.search(r'\"userID\":\s?(\d+)',
             self._room.body).groups(0)[0]
-        self.last_cache_id = re.search(r'\"lastCacheID\": (\d+)',
+        self.last_cache_id = re.search(r'\"lastCacheID\":\s?(\d+)',
             self._room.body).groups(0)[0]
-        self.timestamp = re.search(r'\"timestamp\": (\d+)',
+        self.timestamp = re.search(r'\"timestamp\":\s?(\d+)',
             self._room.body).groups(0)[0]
 
 
