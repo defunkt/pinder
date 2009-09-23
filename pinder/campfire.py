@@ -20,8 +20,8 @@ from room import Room
 
 class Campfire(object):
     """Creates a connection to the Campfire account with the given subdomain.
-    Accepts a boolean indicating whether the connection should be made using
-    SSL or not (default: false)."""
+    Also accepts a boolean indicating whether the connection should be made with
+    SSL or not (default: False)."""
     def __init__(self, subdomain, ssl=False):
         #: The Campfire's subdomain.
         self.subdomain = subdomain
