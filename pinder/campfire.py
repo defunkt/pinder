@@ -106,7 +106,10 @@ class Campfire(object):
             except AttributeError: # the chat is full
                 room_name = room.h2.string.strip()
             if not room_names or room_name in room_names:
-                room_users = room.find('ul').findAll('span')
+                room_users_list = room.find('ul')
+                if not room_users_list:
+                    break
+                room_users = room_users_list.findAll('span')
                 for user in room_users:
                     all_users.append(user.string)
         return set(all_users)
