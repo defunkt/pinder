@@ -28,7 +28,7 @@ class Campfire(object):
         #: Contains the connection cookie.
         self.cookie = None
         #: The U{urlparsed<http://docs.python.org/lib/module-urlparse.html#l2h-4268>} URI of the Campfire account.
-        self.uri = urlparse.urlparse("http://%s.campfirenow.com" % self.subdomain)
+        self.uri = urlparse.urlparse("https://%s.campfirenow.com" % self.subdomain)
         self._location = None
         self._room_re = re.compile(r'room\/(\d*)')
         self._http_client = httplib2.Http(timeout=5)
